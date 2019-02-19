@@ -2,10 +2,9 @@ import * as express from "express";
 import * as bodyParser from "body-parser";
 import { Sender } from "./sender";
 import { Receiver } from "./receiver";
+import { users } from "./db";
 
 const port = process.env.PORT || 5001;
-
-const users: string[] = [];
 
 const app = express();
 

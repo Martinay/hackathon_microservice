@@ -31,7 +31,7 @@ export class Sender {
     }
 
     public sendRegister(name:string): void {        
-        let key = 'loopback.tasks';
+        let key = accountRegisterTopic;
         let message = name;
         this.options.headers.source = accountRegisterTopic + ":" + key;
         this.channel.publish(accountRegisterTopic, key, Buffer.from(message), this.options);
@@ -39,7 +39,7 @@ export class Sender {
     }
 
     public sendDelete(name:string): void {        
-        let key = 'loopback.tasks';
+        let key = accountDeleteTopic;
         let message = name;
         this.options.headers.source = accountDeleteTopic + ":" + key;
         this.channel.publish(accountDeleteTopic, key, Buffer.from(message), this.options);

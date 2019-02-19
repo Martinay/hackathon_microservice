@@ -17,18 +17,14 @@ export const config = {
     },
     exchanges: [
         { name: accountRegisterTopic, type: "topic", options: { publishTimeout: 1000, persistent: true, durable: false } },
-        { name: accountDeleteTopic, type: "topic", options: { publishTimeout: 1000, persistent: true, durable: false } },
-        { name: pomodoroStartTopic, type: "topic", options: { publishTimeout: 1000, persistent: true, durable: false } },
-        { name: pomodoroStopTopic, type: "topic", options: { publishTimeout: 1000, persistent: true, durable: false } }
+        { name: accountDeleteTopic, type: "topic", options: { publishTimeout: 1000, persistent: true, durable: false } }
     ],
     queues: [
         { name: pomodoroQueue, options: { limit: 1000, queueLimit: 1000 } }
     ],
     binding: [
-        { exchange: accountRegisterTopic, target: pomodoroQueue, keys: "loopback.#" },        
-        { exchange: accountDeleteTopic, target: pomodoroQueue, keys: "loopback.#" },
-        { exchange: pomodoroStartTopic, target: pomodoroQueue, keys: "loopback.#" },        
-        { exchange: pomodoroStopTopic, target: pomodoroQueue, keys: "loopback.#" }
+        { exchange: accountRegisterTopic, target: pomodoroQueue, keys: accountRegisterTopic },        
+        { exchange: accountDeleteTopic, target: pomodoroQueue, keys: accountDeleteTopic }
     ],
     logging: {
         adapters: {
