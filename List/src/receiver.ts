@@ -1,6 +1,6 @@
 import * as amqp from "amqplib/callback_api";
-import { config, pomodoroQueue, accountDeleteTopic, accountRegisterTopic } from "./config";
-import { users } from "./db";
+import { config, pomodoroQueue, accountDeleteTopic, pomodoroStartTopic, pomodoroStopTopic } from "./config";
+import { getPomodoroInfo, filterPomodoroInfoByName } from "./db";
 
 export class Receiver {
     constructor() {
@@ -15,7 +15,8 @@ export class Receiver {
 
                     ch.bindQueue(q.queue, ex, accountDeleteTopic);
 
-                    ch.bindQueue(q.queue, ex, accountRegisterTopic);
+                    ch.bindQueue(q.queue, ex, pomodoroStartTopic);
+                    ch.bindQueue(q.queue, ex, pomodoroStopTopic);
 
                     ch.consume(q.queue, (msg) => {
                         this.taskCB(msg)
@@ -38,18 +39,25 @@ export class Receiver {
         switch (msg.fields.routingKey) {
             case accountDeleteTopic:
                 console.log(`Detected ${accountDeleteTopic}`);
-                const index = users.indexOf(msg.content.content, 0);
-                console.log(`deleted: msg.content.content ${msg.content.content}`);
 
-                users.splice(index, 1);
+                filterPomodoroInfoByName(msg.content.content);
+
+                console.log(`deleted: getPomodoroInfo() ${getPomodoroInfo()}`);
+                break;
+
+            case pomodoroStartTopic:
+                console.log(`Detected ${pomodoroStartTopic}`);
+                console.log(`registered: msg.content.content ${msg.content.content}`);
+
+                getPomodoroInfo().push({ user: msg.content.content, startTime: Date.now() });
 
                 break;
 
-            case accountRegisterTopic:
-                console.log(`Detected ${accountRegisterTopic}`);
-                console.log(`registered: msg.content.content ${msg.content.content}`);
+            case pomodoroStopTopic:
 
-                users.push(msg.content.content);
+                console.log(`Detected ${pomodoroStopTopic}`);
+
+                filterPomodoroInfoByName(msg.content.content);
 
                 break;
             default:

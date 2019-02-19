@@ -42,8 +42,3 @@ app.get('/api/stop', (req, res) => {
 
 app.listen(port, () => console.log(`Listening on port ${port}`));
 
-async function run() {
-    console.log("going to start receiver");
-    await receiver.init();
-}
-run();

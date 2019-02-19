@@ -1,11 +1,11 @@
 import * as amqp from "amqplib";
 import { accountRegisterTopic, accountDeleteTopic } from "./config";
-//import uuid = require('uuid');
+import uuid = require('uuid');
 
 export class Sender {
     private channel: amqp.Channel;
 
-    private hash: string = '1234'; // uuid.uuidv1();
+    private hash: string = uuid.v4();
     private sessionId: string = '1234';
     private options = {
         persistent: false,
@@ -23,8 +23,7 @@ export class Sender {
     constructor() {
         amqp.connect('amqp://localhost').then(conn => {
             conn.createChannel().then(channel => {
-                channel.assertExchange(accountRegisterTopic, 'topic', { durable: false }).then(ok => console.log(`connected to ${accountRegisterTopic}`));
-                channel.assertExchange(accountDeleteTopic, 'topic', { durable: false }).then(ok => console.log(`connected to ${accountDeleteTopic}`));
+                channel.assertExchange("hello", 'topic', { durable: false }).then(ok => console.log(`connected to hello`));
                 this.channel = channel;
             })
         });
@@ -34,7 +33,7 @@ export class Sender {
         let key = accountRegisterTopic;
         let message = name;
         this.options.headers.source = accountRegisterTopic + ":" + key;
-        this.channel.publish(accountRegisterTopic, key, Buffer.from(message), this.options);
+        this.channel.publish("hello", key, Buffer.from(message));
         console.log(`published to ${accountRegisterTopic} : ${message}`)
     }
 
@@ -42,7 +41,7 @@ export class Sender {
         let key = accountDeleteTopic;
         let message = name;
         this.options.headers.source = accountDeleteTopic + ":" + key;
-        this.channel.publish(accountDeleteTopic, key, Buffer.from(message), this.options);
+        this.channel.publish("hello", key, Buffer.from(message));
         console.log(`published to ${accountDeleteTopic} : ${message}`)
     }
 }
