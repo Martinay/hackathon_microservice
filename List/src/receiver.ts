@@ -1,5 +1,5 @@
 import * as amqp from "amqplib/callback_api";
-import { config, pomodoroQueue, accountDeleteTopic, pomodoroStartTopic, pomodoroStopTopic } from "./config";
+import { accountDeleteTopic, pomodoroStartTopic, pomodoroStopTopic } from "./config";
 import { getPomodoroInfo, filterPomodoroInfoByName } from "./db";
 
 export class Receiver {
