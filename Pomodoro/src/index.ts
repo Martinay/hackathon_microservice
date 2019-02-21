@@ -2,7 +2,7 @@ import * as express from "express";
 import * as bodyParser from "body-parser";
 import { Sender } from "./sender";
 import { Receiver } from "./receiver";
-import { users } from "./db";
+import { users, startedPomodorosUsers } from "./db";
 
 const port = process.env.PORT || 5001;
 
@@ -21,6 +21,13 @@ app.get('/api/start', (req, res) => {
         return;
     }
 
+    if (startedPomodorosUsers.includes(username)){
+        res.sendStatus(403);
+        return;
+    }
+
+    startedPomodorosUsers.push(username);
+
     console.log(username);
     sender.sendStart(username);
 
@@ -33,6 +40,14 @@ app.get('/api/stop', (req, res) => {
         res.sendStatus(403);
         return;
     }
+
+    const index = startedPomodorosUsers.indexOf(username, 0);
+    if (index < 0) {
+        res.sendStatus(403);
+        return;
+    }
+
+    startedPomodorosUsers.splice(index, 1);
 
     console.log(username);
     sender.sendStop(username);
