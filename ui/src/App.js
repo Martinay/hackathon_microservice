@@ -6,7 +6,7 @@ class App extends Component {
   constructor(props) {
     super(props);
 
-    this.state = { allPomodoros: "Begin" };
+    this.state = { output: "Begin" };
 
     this.getAll = this.getAll.bind(this);
   }
@@ -15,14 +15,14 @@ class App extends Component {
   getAll() {
     fetch('/api/get')
     .then(response => response.text())
-    .then(data => this.setState({ allPomodoros: data }));  
+    .then(data => this.setState({ output: data }));  
   }
 
   render() {
     return (
       <div className="App">
         <header className="App-header">
-          <p>{this.state.allPomodoros}</p>
+          <p>{this.state.output}</p>
           <button onClick={this.getAll}>Get all</button>
         </header>
       </div>
